@@ -203,16 +203,16 @@
   </div>
 
   <!-- Live Chat Tawk.to -->
-<!--Start of Tawk.to Script-->
+  <!--Start of Tawk.to Script-->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
 (function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/6849752e76ac2c190cfccd4d/1itff3g45';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/6849752e76ac2c190cfccd4d/1itff3g45';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 <!--End of Tawk.to Script-->
@@ -243,7 +243,7 @@ s0.parentNode.insertBefore(s1,s0);
 
         const span = document.createElement('span');
         span.className = 'item-name-price';
-        span.textContent = `${item.name} - ${formatPrice(item.price)}`;
+        span.textContent = `${item.name} - ${formatPrice(item.price)} x${item.quantity}`;
 
         const btn = document.createElement('button');
         btn.className = 'remove-btn';
@@ -259,7 +259,7 @@ s0.parentNode.insertBefore(s1,s0);
         cartItemsEl.appendChild(li);
       });
 
-      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       cartTotalEl.textContent = `Total: ${formatPrice(total)}`;
     }
 
@@ -269,9 +269,17 @@ s0.parentNode.insertBefore(s1,s0);
         const item = {
           id: itemEl.getAttribute('data-id'),
           name: itemEl.getAttribute('data-name'),
-          price: Number(itemEl.getAttribute('data-price'))
+          price: Number(itemEl.getAttribute('data-price')),
+          quantity: 1
         };
-        cart.push(item);
+
+        const existingItem = cart.find(cartItem => cartItem.id === item.id);
+        if (existingItem) {
+          existingItem.quantity++;
+        } else {
+          cart.push(item);
+        }
+
         alert(`${item.name} ditambahkan ke keranjang!`);
         updateCartUI();
       });
@@ -292,9 +300,9 @@ s0.parentNode.insertBefore(s1,s0);
       }
       let message = 'Pesanan saya:%0A';
       cart.forEach(item => {
-        message += `- ${item.name} : Rp ${item.price.toLocaleString('id-ID')}%0A`;
+        message += `- ${item.name} x${item.quantity} : Rp ${item.price * item.quantity}%0A`;
       });
-      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       message += `%0ATotal: Rp ${total.toLocaleString('id-ID')}`;
 
       const waNumber = '6282165816679'; // Ganti nomor WhatsApp tujuanmu
